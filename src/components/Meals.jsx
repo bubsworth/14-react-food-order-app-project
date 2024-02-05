@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import MealItem from "./MealItem";
 
 export default function Meals({ fallbackText, loadingText, isLoading }) {
   const [loadedMeals, setLoadedMeals] = useState([]);
@@ -27,13 +28,7 @@ export default function Meals({ fallbackText, loadingText, isLoading }) {
       {!isLoading && meals.length > 0 && ( */}
       <ul id="meals">
         {loadedMeals.map((meal) => (
-          <li key={meal.id} className="meal-item">
-            <div className="meal-item article">
-              <h3 className="meal-item h3">{meal.name}</h3>
-              <p className="meal-item-description">{meal.description}</p>
-              <p className="meal-item-price">{meal.price}</p>
-            </div>
-          </li>
+          <MealItem key={meal.id} meal={meal} />
         ))}
       </ul>
       {/* )} */}
