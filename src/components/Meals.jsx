@@ -1,4 +1,5 @@
-import MealItem from "./MealItem";
+import MealItem from "./MealItem.jsx";
+import Error from "./Error.jsx";
 import useHttp from "../hooks/useHttp";
 
 const requestConfig = {};
@@ -11,22 +12,20 @@ export default function Meals() {
   } = useHttp("http://localhost:3000/meals", requestConfig, []);
 
   if (isLoading) {
-    return <p>Fetching meals...</p>;
+    return <p className="center">Fetching meals...</p>;
+  }
+
+  if (error) {
+    return <Error title="Failed to fetch meals." message={error} />;
   }
 
   return (
     <>
-      {/* {isLoading && <p className="fallback-text">{loadingText}</p>}
-      {!isLoading && meals.length === 0 && (
-        <p className="fallback-text">{fallbackText}</p>
-      )}
-      {!isLoading && meals.length > 0 && ( */}
       <ul id="meals">
         {loadedMeals.map((meal) => (
           <MealItem key={meal.id} meal={meal} />
         ))}
       </ul>
-      {/* )} */}
     </>
   );
 }
