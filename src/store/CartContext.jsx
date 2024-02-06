@@ -12,6 +12,7 @@ function cartReducer(state, action) {
     const existingCartItemIndex = state.items.findIndex(
       (item) => item.id === action.item.id
     );
+
     const updatedItems = [...state.items];
 
     if (existingCartItemIndex > -1) {

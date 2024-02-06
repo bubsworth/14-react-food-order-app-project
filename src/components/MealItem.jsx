@@ -1,5 +1,6 @@
 import { useContext } from "react";
-import { currencyFormatter } from "../util/formatting";
+
+import { currencyFormatter } from "../util/formatting.js";
 import Button from "./UI/Button.jsx";
 import CartContext from "../store/CartContext.jsx";
 
@@ -12,7 +13,7 @@ export default function MealItem({ meal }) {
 
   return (
     <li className="meal-item">
-      <article className="meal-item article">
+      <article>
         <img src={`http://localhost:3000/${meal.image}`} alt={meal.name} />
         <div>
           <h3>{meal.name}</h3>

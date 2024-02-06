@@ -1,4 +1,5 @@
 import { useContext } from "react";
+
 import Modal from "./UI/Modal.jsx";
 import CartContext from "../store/CartContext.jsx";
 import { currencyFormatter } from "../util/formatting.js";
@@ -6,10 +7,13 @@ import Input from "./UI/Input.jsx";
 import Button from "./UI/Button.jsx";
 import UserProgressContext from "../store/UserProgressContext.jsx";
 import useHttp from "../hooks/useHttp.js";
+import Error from "./Error.jsx";
 
 const requestConfig = {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+  },
 };
 
 export default function Checkout() {
@@ -22,7 +26,7 @@ export default function Checkout() {
     error,
     sendRequest,
     clearData,
-  } = useHttp("https://localhost:3000/orders", requestConfig);
+  } = useHttp("http://localhost:3000/orders", requestConfig);
 
   const cartTotal = cartCtx.items.reduce(
     (totalPrice, item) => totalPrice + item.quantity * item.price,
@@ -33,7 +37,7 @@ export default function Checkout() {
     userProgressCtx.hideCheckout();
   }
 
-  function handleFinished() {
+  function handleFinish() {
     userProgressCtx.hideCheckout();
     cartCtx.clearCart();
     clearData();
@@ -43,7 +47,7 @@ export default function Checkout() {
     event.preventDefault();
 
     const fd = new FormData(event.target);
-    const customerData = Object.fromEntries(fd.entries());
+    const customerData = Object.fromEntries(fd.entries()); // { email: test@example.com }
 
     sendRequest(
       JSON.stringify({
@@ -58,7 +62,7 @@ export default function Checkout() {
   let actions = (
     <>
       <Button type="button" textOnly onClick={handleClose}>
-        Cancel
+        Close
       </Button>
       <Button>Submit Order</Button>
     </>
@@ -72,16 +76,16 @@ export default function Checkout() {
     return (
       <Modal
         open={userProgressCtx.progress === "checkout"}
-        onClose={handleFinished}
+        onClose={handleFinish}
       >
         <h2>Success!</h2>
         <p>Your order was submitted successfully.</p>
         <p>
-          We will get back to yuo with more details via email within the next
+          We will get back to you with more details via email within the next
           few minutes.
         </p>
         <p className="modal-actions">
-          <Button onClick={handleFinished}>Okay</Button>
+          <Button onClick={handleFinish}>Okay</Button>
         </p>
       </Modal>
     );
@@ -91,10 +95,10 @@ export default function Checkout() {
     <Modal open={userProgressCtx.progress === "checkout"} onClose={handleClose}>
       <form onSubmit={handleSubmit}>
         <h2>Checkout</h2>
-        <p>Total amount: {currencyFormatter.format(cartTotal)}</p>
+        <p>Total Amount: {currencyFormatter.format(cartTotal)}</p>
 
         <Input label="Full Name" type="text" id="name" />
-        <Input label="E-mail Address" type="email" id="email" />
+        <Input label="E-Mail Address" type="email" id="email" />
         <Input label="Street" type="text" id="street" />
         <div className="control-row">
           <Input label="Postal Code" type="text" id="postal-code" />
